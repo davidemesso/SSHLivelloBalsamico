@@ -1,0 +1,26 @@
+create database sshDatabase;
+
+create table barrels(
+    id int(4) not null primary key,
+    name VARCHAR(20),
+    radius decimal(11,7),
+    length decimal(11,7),
+    lat decimal(11,7),
+    lng decimal(11,7)
+);
+
+create table ambientData(
+    id int(4) not null, FOREIGN KEY (id) REFERENCES barrels(id),
+    timestamp datetime not null,
+    pressure decimal(7,2),
+    temperature decimal(5,2),
+    humidity int(3),
+    primary key(id, time)
+);
+
+create table balsamicLevel(
+    id int(4) not null, FOREIGN KEY (id) REFERENCES barrels(id),
+    timestamp datetime not null,
+    level decimal(7,3),
+    volume decimal(7,3)
+);

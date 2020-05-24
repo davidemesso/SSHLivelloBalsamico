@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--JQuery UI-->
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<!--DataTables-->
+		<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/1.10.20/js/dataTables.jqueryui.min.js"></script>
+		<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+		<script src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.jqueryui.min.js"></script>
+		<script src='{{static_url("js/DataTable.js")}}'></script>
+		<!--Chart-->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+		<script src='{{static_url("js/SensorGraph.js")}}'></script>
+		<script src='{{static_url("js/dataPage.js")}}'></script>
+		<script src='{{static_url("js/materialize.js")}}'></script>
+		
+		<script src='{{static_url("js/WSHandler.js")}}'></script>
+
+		<!--JQuery UI-->
+		<link rel="stylesheet" href='{{static_url("jquery/jquery-ui.css")}}'>
+		<link rel="stylesheet" href='{{static_url("css/materialize.css")}}'>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--DataTables-->
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.jqueryui.min.css">
+		<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.jqueryui.min.css">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Data monitor</title>
+	</head>
+
+	<body style="margin-top: 68px">
+		<nav style="position: fixed; top: 0px; background: #dbeaf3; z-index: 9998;">
+			<a href="#" data-target="slide-out" class="sidenav-trigger" style="z-index: 9999; display: block"><i class="material-icons" style="color: #666666">menu</i></a>
+		</nav>
+
+		<ul id="slide-out" class="sidenav" style="z-index: 9999">
+			<li class="waves-effect" style="width: 100%">
+				<a href="./sensors" style="color: goldenrod">
+					<i class="material-icons" style="color: goldenrod">storage</i>
+					Barrels
+				</a>
+			</li>
+			<li>
+				<div class="divider"></div>
+			</li>
+			<li class="waves-effect active" style="width: 100%;">
+				<a style="color: darkgreen">
+					<i class="material-icons" style="color: darkgreen">assessment</i>
+					Data
+				</a>
+			</li>
+		</ul>
+
+		<div style="
+			margin: 16px;
+			margin-top: 80px;
+			padding-left: 16px;
+			padding-right: 16px;"
+		>
+			<h3>Real time data</h3>
+			<div style="display: inline-flex">
+				<span style="width: 420px !important; height: 300px !important">
+					<canvas id="temperatureChart"></canvas>
+					Temperature (°C)
+				</span>
+				<span style="width: 420px !important; height: 300px !important">
+					<canvas id="pressureChart"></canvas>
+					Pressure (hPa)
+				</span>
+				<span style="width: 420px !important; height: 300px !important">
+					<canvas id="humidityChart"></canvas>
+					Humidity (%)
+				</span>
+			</div>
+			
+			<div id="realtimeData">
+				<table id="realtimeDataTable" class="nowrap display hover stripe" style="width:100%">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Time</th>
+							<th>Pressure (hPa)</th>
+							<th>Temperature (°C)</th>
+							<th>Humidity (%)</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+
+			<h4>Request storic data</h4>
+			<p>Start date: <input class="datepicker" type="text" id="startDatePicker" style="width: 25%"></p>
+			<p>End date: <input class="datepicker" type="text" id="endDatePicker" style="width: 25%"></p>
+			<button class="waves-effect waves-teal btn-flat" onclick="sendStoricDataRequest()">Get data</button>
+			<div id="tableContainer">
+				<h3 
+					style="display: inline-block; padding-right: 50px;"> 
+					Storic data 
+				</h3>
+				<button class="waves-effect waves-teal btn-flat" onclick="closeStoricDataField()">Close</button>
+				<table id="dataTable" class="nowrap display hover stripe" style="width:100%">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Time</th>
+							<th>Pressure (hPa)</th>
+							<th>Temperature (°C)</th>
+							<th>Humidity (%)</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>
