@@ -6,13 +6,12 @@ import time
 import websocket
 import threading
 import time
-import numpy
 
 class MySQLHandler():
 	DEFAULT_CONNECTOR_CONFIG = {
-		'user': 'root',
-		'password': 'rootroot',
-		'host': '127.0.0.1',
+		'user': 'access',
+		'password': 'RootRoot123!',
+		'host': 'localhost',
 		'database': 'sshDatabase'
 	}
 
@@ -76,10 +75,10 @@ class wsMessageReceiverThread(threading.Thread):
 				self.sendSensorsData(data['payload'])
 	
 	def sendStoricData(self, data):
-		query = f"""SELECT ambientdata.id, name, timestamp, pressure, temperature, humidity 
+		query = f"""SELECT ambientData.id, name, timestamp, pressure, temperature, humidity 
 					FROM ambientData JOIN barrels 
 					WHERE date(timestamp) >= "{data['startTime']}" and
-							date(timestamp) <= "{data['endTime']}" """
+							date(timestamp) <= "{data['endTime']};" """
 		storicData = self.mySQLHandler.executeSingleSelectQuery(query)
 		print(query)
 		formattedData = []
@@ -103,10 +102,10 @@ class wsMessageReceiverThread(threading.Thread):
 
 	def sendSensorsData(self, data):
 		query = """ SELECT barrels.*, volume 
-					FROM barrels JOIN balsamiclevel 
-					ON barrels.id = balsamiclevel.id AND 
-					timestamp = (SELECT MAX(timestamp) FROM balsamiclevel WHERE id = barrels.id)
-					GROUP BY id"""
+					FROM barrels JOIN balsamicLevel 
+					ON barrels.id = balsamicLevel.id AND 
+					timestamp = (SELECT MAX(timestamp) FROM balsamicLevel WHERE id = barrels.id)
+					GROUP BY id;"""
 		sensorsData = self.mySQLHandler.executeSingleSelectQuery(query)
 		formattedData = []
 		for el in sensorsData:
@@ -130,7 +129,7 @@ class wsMessageReceiverThread(threading.Thread):
 	
 
 class MQTTSubscriber:
-	HOSTNAME = "mqtt.ssh.edu.it"
+	HOSTNAME = "192.168.89.103"
 	TOPIC = "fermi/ssh/vinegar/#"
 
 	def __init__(self, name):
@@ -146,7 +145,6 @@ class MQTTSubscriber:
 		#WS sender related init
 		self.wsHandler = self.openWsConnectionToTornado()
 
-		# TODO
 		#WS receiver related inits
 		self.wsReceiver = wsMessageReceiverThread(self.mySQLHandler, self.wsHandler)
 		self.wsReceiver.start()
@@ -168,16 +166,15 @@ class MQTTSubscriber:
 			query = f"""INSERT INTO ambientData (id, timestamp, temperature, pressure, humidity) 
 						VALUES ({data['id']}, "{datetime}", 
 								{data['temp']}, {data['pres']}, 
-								{data['hum']})"""
+								{data['hum']});"""
 			self.sendDataToTornado(json.dumps(data))
 		elif topic == "fermi/ssh/vinegar/balsamicLevel/":
 			volume = self.getVolumeInLiters(data['radius'], data['length'], data['level'])
 			print(volume)
 			query = f"""INSERT INTO balsamicLevel (id, timestamp, level, volume) 
 					VALUES ({data['id']}, "{datetime}", 
-							{data['level']}, {volume})"""
-				
-
+							{data['level']}, {volume});"""
+		
 		self.mySQLHandler.executeSingleQuery(query)
 	
 

@@ -50,7 +50,7 @@ function initCharts()
 
 function initWS()
 {
-    ws = new WSHandler("ws://localhost:8888/data/ws", wsOnMessage);
+    ws = new WSHandler("ws://192.168.89.111:8888/data/ws", wsOnMessage);
 }
 
 function wsOnMessage(evt) {
