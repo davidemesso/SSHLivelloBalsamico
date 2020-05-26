@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd TornadoServer/
-python3 Messori-Tornado-Server.py &> /dev/null &
-cd ..
-python3 backendDataHandler.py &> /dev/null &
+pkill -f "python3.*"
+
+python3 /home/messori/TornadoServer/Messori-Tornado-Server.py &> /dev/null &
+python3 /home/messori/backendDataHandler.py &> /dev/null &

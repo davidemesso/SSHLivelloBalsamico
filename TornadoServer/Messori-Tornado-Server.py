@@ -7,7 +7,7 @@ from tornado import gen
 
 class MainHandler(tornado.web.RequestHandler):
 	def get(self):
-		self.render("data.html")
+		self.render("index.html")
 
 class DataHandler(tornado.web.RequestHandler):
 	def get(self):
@@ -91,7 +91,7 @@ class TornadoServer:
 		]
 
 		settings = {
-			"static_path": "./"
+			"static_path": "/home/messori/TornadoServer"
 		}
 
 
