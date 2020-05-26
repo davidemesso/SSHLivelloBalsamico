@@ -34,7 +34,7 @@ function initMap()
 
 function initWS()
 {
-    ws = new WSHandler("ws://192.168.89.111:8888/data/ws", wsOnMessage);
+    ws = new WSHandler("ws://balsamico.ssh.edu.it:80/data/ws", wsOnMessage);
 }
 
 function wsOnMessage(evt) {
