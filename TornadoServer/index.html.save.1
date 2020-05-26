@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width">
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src='{{static_url("js/materialize.js")}}'></script>
+		<link rel="stylesheet" href='{{static_url("css/materialize.css")}}'>
+		<title>Livello Balsamico</title>
+	</head>
+	<body>
+		
+		<div class="card" style="padding: 0px 20px 20px 20px; margin: 20px;">
+			<div class="card-content center-align row" style="padding-top: 0px;">
+				<img class="col s6" src="/immagini/LogoFermi.png" alt="Logo" style="width: 30%">
+				<img class="col s6" src="/immagini/SSHLogo.png" alt="Logo" style="width: 30%">
+			</div
+			<span class="card-title">Livello balsamico</span>			
+			<p>Descrizione generale progetto<p> 
+			<div class="card-tabs">
+				<ul class="tabs tabs-fixed-width">
+				<li class="tab"><a href="#tab1">Costa Toni</a></li>
+				<li class="tab"><a href="#tab2">Messori Fedele</a></li>
+				</ul>
+			</div>
+			<div class="card-content grey lighten-4">
+				<div id="tab1">
+					<p>Descrizione progetto 1</p>
+					<a href="/appPage">VAI DA TONI E COSTA!!</a>
+				</div>
+				<div id="tab2">
+					<p>Descrizione progetto 2</p>
+					<a href="/sensors">VAI DA MESSORI E FEDELE!</a>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			$(".tabs").tabs();
+		</script>
+	</body>
+</html>
