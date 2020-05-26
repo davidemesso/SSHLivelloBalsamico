@@ -87,8 +87,10 @@ class TornadoServer:
 		self.port = port
 		
 	def make_app(self):
+		path = '/(.*)'
 		handlers = [
 			(r"/", MainHandler),
+			(r"/immagini/(.*)", tornado.web.StaticFileHandler, {'path':'home/messori/TornadoServer/immagini'}) 
 			(r"/data", DataHandler),
 			(r"/sensors", SensorsHandler),
 			(r"/data/ws", DataWsHandler),
