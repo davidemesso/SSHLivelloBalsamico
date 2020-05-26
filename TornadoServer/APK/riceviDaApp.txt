@@ -1,0 +1,99 @@
+from datetime import datetime
+import paho.mqtt.client as mqtt
+import random
+import pymysql
+import ssl
+
+#------------------------------------------------------------
+# Indirizzo broker mqtt
+aws_iot_endpoint = "balsamico.toni.it"
+url = "https://{}".format(aws_iot_endpoint)
+
+# Impostazione certificato per autenticazione a mqtt
+ca = "PERCORSO CA.crt"  # certification autority
+cert = "PERCORSO CLIENT.crt"  # certificate
+private = "PERCORSO CLIENT.key"  # private key
+
+ssl_context = ssl.create_default_context()
+ssl_context.load_verify_locations(cafile=ca)
+ssl_context.load_cert_chain(certfile=cert, keyfile=private)
+
+#------------------------------------------------------------
+# Client mqtt per invio nuova misura
+inviaMisura = mqtt.Client()
+#def on_log_misura(client, userdata, level, buf):
+#    print("log invia: ", buf)
+#def on_publish_misura(client, userdata, mid):
+#    print("PUBBLICATO\n")
+#def on_connect_misura(client, userdata, flags, rc):
+#    print("CONNESSO\n")
+
+#inviaMisura.on_publish = on_publish_misura
+#inviaMisura.on_connect = on_connect_misura
+#inviaMisura.on_log = on_log_misura  # set client logging
+
+inviaMisura.tls_set_context(context=ssl_context)
+inviaMisura.connect(aws_iot_endpoint, port=8883)
+
+#------------------------------------------------------------
+# Client mqtt per ricezione nome utente, nome botte
+riceviCredenziali = mqtt.Client()
+riceviCredenziali.tls_set_context(context=ssl_context)
+#def on_log_credenziali(client, userdata, level, buf):
+#    print("log ricevi: ", buf)
+#def on_connect_credenziali(client, userdata, flags, rc):
+#    print("In attesa di credenziali")
+def on_message_credenziali(client, userdata, message):
+    chain = message.payload.decode()
+    credenziali = chain.split(",")
+    if len(credenziali) == 2:
+        nomeUtente = credenziali[0]
+        nomeBotte = credenziali[1]
+
+        tmp = datetime.today()
+        data_nuova_misura = tmp.date()
+        db = pymysql.connect("balsamico.toni.it", "marcello", "PASSWORD Database", "database_aceto", 3306)
+        cursorObject = db.cursor()
+        sqlQuery = "SELECT data_ultima_misura FROM tabella_botti WHERE nome_botte = " + nomeBotte + " AND possessore = " + nomeUtente
+        cursorObject.execute(sqlQuery)
+        data = cursorObject.fetchone()
+        db.rollback()
+        db.close()
+        data_ultima_misura = data[0]
+        if data_ultima_misura is not None:
+            delta = data_nuova_misura - data_ultima_misura
+            dif_gg = delta.days
+
+            if dif_gg == 0:
+                valPix = random.randint(20, 40)
+                misura = (valPix * 0.25) / 10
+            else:
+                misura = 0
+                for i in range(0, dif_gg):
+                    valPix = random.randint(60, 68)
+                    misura_tmp = (valPix * 0.25) / 10
+                    misura = misura + misura_tmp
+        elif data_ultima_misura is None:
+            valPix = random.randint(20, 40)
+            misura = (valPix * 0.25) / 10
+
+        misura = str(misura)
+        messaggio = nomeUtente + "," + nomeBotte + "," + misura
+    elif len(credenziali) == 3:
+        nomeUtente = credenziali[0]
+        nomeBotte = credenziali[1]
+        resetta = credenziali[2]
+        messaggio = nomeUtente + "," + nomeBotte + "," + resetta + ",flag"
+    inviaMisura.loop_start()
+    inviaMisura.publish(topic="livelloBalsamico", payload=messaggio)  #invio nuova misura
+
+#riceviCredenziali.on_connect = on_connect_credenziali
+riceviCredenziali.on_message = on_message_credenziali
+#riceviCredenziali.on_log = on_log_credenziali  # set client logging
+
+riceviCredenziali.connect(aws_iot_endpoint, port=8883)
+riceviCredenziali.subscribe("inviodati")  #iscrizione al topic mqtt per ricezione dati da app
+
+#------------------------------------------------------------
+# Avvio clients mqtt
+riceviCredenziali.loop_forever()
