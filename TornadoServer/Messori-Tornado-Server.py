@@ -90,7 +90,8 @@ class TornadoServer:
 		path = '/(.*)'
 		handlers = [
 			(r"/", MainHandler),
-			(r"/immagini/(.*)", tornado.web.StaticFileHandler, {'path':'home/messori/TornadoServer/immagini'}) 
+			(r"/immagini/(.*)", tornado.web.StaticFileHandler, {'path':'home/messori/TornadoServer/immagini'}),
+			(r"/APK/(.*)", tornado.web.StaticFileHandler, {'path':'home/messori/TornadoServer/APK'}),
 			(r"/data", DataHandler),
 			(r"/sensors", SensorsHandler),
 			(r"/data/ws", DataWsHandler),
@@ -115,5 +116,5 @@ class TornadoServer:
 
 			
 if __name__ == '__main__':
-	server = TornadoServer(8888)
+	server = TornadoServer(80)
 	server.startServer()
