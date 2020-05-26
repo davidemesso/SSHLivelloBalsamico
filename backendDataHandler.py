@@ -199,7 +199,7 @@ class MQTTSubscriber:
 	def openWsConnectionToTornado(self):
 		ws = None
 		try:
-			ws = websocket.create_connection("ws://127.0.0.1:8888/data/ws")
+			ws = websocket.create_connection("ws://127.0.0.1:80/data/ws")
 		except:
 			print("ws connection error")
 		return ws
