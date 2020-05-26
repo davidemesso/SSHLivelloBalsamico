@@ -16,6 +16,10 @@ class DataHandler(tornado.web.RequestHandler):
 class SensorsHandler(tornado.web.RequestHandler):
 	def get(self):
 		self.render("sensors.html")
+		
+class AppPageHandler(tornado.web.RequestHandler):
+	def get(self):
+		self.render("/home/toni/prova.html")
 
 class DataWsHandler(tornado.websocket.WebSocketHandler):
 	connections = []
@@ -87,7 +91,8 @@ class TornadoServer:
 			(r"/", MainHandler),
 			(r"/data", DataHandler),
 			(r"/sensors", SensorsHandler),
-			(r"/data/ws", DataWsHandler)
+			(r"/data/ws", DataWsHandler),
+			(r"/appPage", AppPageHandler)
 		]
 
 		settings = {
