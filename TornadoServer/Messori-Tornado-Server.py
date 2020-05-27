@@ -27,6 +27,9 @@ class DataWsHandler(tornado.websocket.WebSocketHandler):
 	lastRequest = 0
 	requestDict = {}
 	
+	async def check_origin(self, origin):
+            return True
+	
 	def open(self):
 		print("ws connected")
 		self.connections.append(self)

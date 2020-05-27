@@ -31,7 +31,7 @@
 	</head>
 
 	<body style="margin-top: 68px">
-		<nav style="position: fixed; top: 0px; background: #dbeaf3; z-index: 9998;">
+		<nav style="position: fixed;top: 0px;background: #dbf1f347; backdrop-filter: blur(10px);z-index: 9998;--webkit-backdrop-filter: blur(10px);">
 			<a href="#" data-target="slide-out" class="sidenav-trigger" style="z-index: 9999; display: block"><i class="material-icons" style="color: #666666">menu</i></a>
 		</nav>
 
@@ -43,7 +43,7 @@
 				</a>
 			</li>
 			<li>
-				<div class="divider"></div>
+				<div class="divider" style="margin: 8px 16px;"></div>
 			</li>
 			<li class="waves-effect active" style="width: 100%;">
 				<a style="color: darkgreen">
@@ -52,7 +52,7 @@
 				</a>
 			</li>
 			<li>
-				<div class="divider"></div>
+				<div class="divider" style="margin: 8px 16px;"></div>
 			</li>
 			<li class="waves-effect" style="width: 100%;">
 				<a href="./" style="color: indianred">
@@ -69,16 +69,16 @@
 			padding-right: 16px;"
 		>
 			<h3>Real time data</h3>
-			<div style="display: inline-flex">
-				<span style="width: 420px !important; height: 300px !important">
+			<div class="row">
+				<span class="col s12 l4">
 					<canvas id="temperatureChart"></canvas>
 					Temperature (°C)
 				</span>
-				<span style="width: 420px !important; height: 300px !important">
+				<span class="col s12 l4">
 					<canvas id="pressureChart"></canvas>
 					Pressure (hPa)
 				</span>
-				<span style="width: 420px !important; height: 300px !important">
+				<span class="col s12 l4">
 					<canvas id="humidityChart"></canvas>
 					Humidity (%)
 				</span>
