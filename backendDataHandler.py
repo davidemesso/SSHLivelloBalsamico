@@ -76,7 +76,8 @@ class wsMessageReceiverThread(threading.Thread):
 	
 	def sendStoricData(self, data):
 		query = f"""SELECT ambientData.id, name, timestamp, pressure, temperature, humidity 
-					FROM ambientData JOIN barrels 
+					FROM ambientData JOIN barrels
+					ON (ambientData.id = barrels.id)
 					WHERE date(timestamp) >= "{data['startTime']}" and
 							date(timestamp) <= "{data['endTime']};" """
 		storicData = self.mySQLHandler.executeSingleSelectQuery(query)
@@ -101,7 +102,7 @@ class wsMessageReceiverThread(threading.Thread):
 		self.wsHandler.send(json.dumps(packet))
 
 	def sendSensorsData(self, data):
-		query = """ SELECT barrels.*, volume 
+		query = """ SELECT barrels.id, name, volume, radius, length, lat, lng
 					FROM barrels JOIN balsamicLevel 
 					ON barrels.id = balsamicLevel.id AND 
 					timestamp = (SELECT MAX(timestamp) FROM balsamicLevel WHERE id = barrels.id)

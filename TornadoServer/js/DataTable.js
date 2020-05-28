@@ -9,8 +9,8 @@ class DataTable
     {
         this.table
             .row
-            .add(Object.values(data))
-            .draw(false);
+            .add(Object.values(data));
+        this.table.draw(false);
     }
 
     addList(list)
