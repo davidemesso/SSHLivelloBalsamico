@@ -21,7 +21,9 @@ function initJQueryComponents()
     });
 
     $('.sidenav').sidenav();
-    $('#loaderModal').modal();
+    $('#loaderModal').modal({
+	dismissible: false
+    });
 }
 
 function initTables()
@@ -64,8 +66,11 @@ function wsOnMessage(evt) {
         data.time = getTimestamp(data.time);
         realTimeTable.addData(data);
     }
-    else 
+    else
+    {
         showStoricDataField(data);
+	$("#loaderModal").modal("close");
+    }
 }
 
 function getTimestamp(data)
@@ -97,7 +102,10 @@ function sendStoricDataRequest()
     }
     
     if(startTime && endTime)
+    {
         ws.send(JSON.stringify(message));
+    	$("#loaderModal").modal("open");
+    }
 }
 
 function closeStoricDataField()

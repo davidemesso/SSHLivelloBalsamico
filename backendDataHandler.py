@@ -113,11 +113,11 @@ class wsMessageReceiverThread(threading.Thread):
 			formattedData.append({
 				"id"   : str(el[0]),
 				"name" : str(el[1]),
-				"radius" : str(el[2]),
-				"length" : str(el[3]),
-				"lat" : str(el[4]),
-				"long" : str(el[5]),
-				"volume" : str(el[6])
+				"volume" : str(el[2]),
+				"radius" : str(el[3]),
+				"length" : str(el[4]),
+				"lat" : str(el[5]),
+				"long" : str(el[6])
 			})
 		packet = {
 			"type" : "SensorsDataServe",
