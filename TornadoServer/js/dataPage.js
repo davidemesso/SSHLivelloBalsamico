@@ -20,9 +20,8 @@ function initJQueryComponents()
         format: 'yy-mm-dd'
     });
 
-    $(document).ready(function(){
-        $('.sidenav').sidenav();
-    });
+    $('.sidenav').sidenav();
+    $('#loaderModal').modal();
 }
 
 function initTables()

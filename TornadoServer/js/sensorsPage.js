@@ -13,9 +13,7 @@ $(document).ready(() => {
 
 function initJQueryComponents()
 {
-    $(document).ready(function(){
-        $('.sidenav').sidenav();
-    });
+    $('.sidenav').sidenav();
 }
 
 function initTable()
