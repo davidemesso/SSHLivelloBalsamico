@@ -43,8 +43,8 @@ class SensorGraph
         let timestamp = this.getTimestamp(data);
 
         this.timeList.push(timestamp);
-        this.dataList[data.id].push({x: timestamp, y: value});
-        
+	this.dataList[data.id].push({x: timestamp, y: value});
+
         this.datasets[data.id] = {
             label: data.id,
             data: this.dataList[data.id],
@@ -55,7 +55,7 @@ class SensorGraph
                 this.colorForSensor[data.id]+' 1)'
             ],
             borderWidth: 1
-        }					
+        }
     }
 
     updateChart()
@@ -67,7 +67,7 @@ class SensorGraph
         this.chart.update();
     }
 
-    
+
     getTimestamp(data)
     {
         let d = new Date(0);

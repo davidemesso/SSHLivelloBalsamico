@@ -79,9 +79,9 @@ class wsMessageReceiverThread(threading.Thread):
 					FROM ambientData JOIN barrels
 					ON (ambientData.id = barrels.id)
 					WHERE date(timestamp) >= "{data['startTime']}" and
-							date(timestamp) <= "{data['endTime']};" """
+							date(timestamp) <= "{data['endTime']}" 
+                                        LIMIT 600;"""
 		storicData = self.mySQLHandler.executeSingleSelectQuery(query)
-		print(query)
 		formattedData = []
 		for el in storicData:
 			formattedData.append({
@@ -103,9 +103,9 @@ class wsMessageReceiverThread(threading.Thread):
 
 	def sendSensorsData(self, data):
 		query = """ SELECT barrels.id, name, volume, radius, length, lat, lng
-					FROM barrels JOIN balsamicLevel 
-					ON barrels.id = balsamicLevel.id AND 
-					timestamp = (SELECT MAX(timestamp) FROM balsamicLevel WHERE id = barrels.id)
+					FROM barrels JOIN balsamicLevel
+					ON barrels.id = balsamicLevel.id AND
+					timestamp = (SELECT timestamp FROM balsamicLevel WHERE id=barrels.id ORDER BY timestamp desc LIMIT 1)
 					GROUP BY id;"""
 		sensorsData = self.mySQLHandler.executeSingleSelectQuery(query)
 		formattedData = []
@@ -127,15 +127,15 @@ class wsMessageReceiverThread(threading.Thread):
 			}
 		}
 		self.wsHandler.send(json.dumps(packet))
-	
+
 
 class MQTTSubscriber:
 	HOSTNAME = "192.168.89.103"
 	TOPIC = "fermi/ssh/vinegar/#"
 
 	def __init__(self, name):
-		self.client = client.Client(name)    
-		
+		self.client = client.Client(name)
+
 		#MQTT related init
 		self.client.on_message = self.onMessage
 
@@ -169,15 +169,16 @@ class MQTTSubscriber:
 								{data['temp']}, {data['pres']}, 
 								{data['hum']});"""
 			self.sendDataToTornado(json.dumps(data))
+			self.mySQLHandler.executeSingleQuery(query)
 		elif topic == "fermi/ssh/vinegar/balsamicLevel/":
 			volume = self.getVolumeInLiters(data['radius'], data['length'], data['level'])
 			print(volume)
 			query = f"""INSERT INTO balsamicLevel (id, timestamp, level, volume) 
-					VALUES ({data['id']}, "{datetime}", 
+					VALUES ({data['id']}, "{datetime}",
 							{data['level']}, {volume});"""
-		
-		self.mySQLHandler.executeSingleQuery(query)
-	
+
+			#self.mySQLHandler.executeSingleQuery(query)
+
 
 	def getDatetimeFromEpoch(self, epoch):
 		localtime = time.localtime(epoch)

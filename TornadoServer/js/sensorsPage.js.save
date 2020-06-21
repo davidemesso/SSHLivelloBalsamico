@@ -8,7 +8,7 @@ $(document).ready(() => {
     initTable();
     initMap();
     initWS();
-    //sendSensorsDataRequest();
+    sendSensorsDataRequest();
 });
 
 function initJQueryComponents()
@@ -32,7 +32,7 @@ function initMap()
 
 function initWS()
 {
-    ws = new WSHandler("ws://balsamico.ssh.edu.it:80/data/ws", wsOnMessage, sendSensorsDataRequest);
+    ws = new WSHandler("ws://balsamico.ssh.edu.it:80/data/ws", wsOnMessage);
 }
 
 function wsOnMessage(evt) {
@@ -53,11 +53,12 @@ function showSensorsDataField(data)
 }
 
 function sendSensorsDataRequest()
-{
+{   
     packet = {
         type : "SensorsDataRequest",
         payload : {}
     };
 
-    ws.send(JSON.stringify(packet));
+    setTimeout(() =            ws.send(JSON.stringify(packet));
+    	}, 800);
 }
